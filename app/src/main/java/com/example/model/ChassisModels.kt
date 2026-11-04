@@ -23,6 +23,24 @@ enum class ChassisZone(
     SQUEEZE_FRAME("squeeze_frame", "Bilateral Frame Squeeze", "SQZ", 0.50f, 0.50f)
 }
 
+/**
+ * Arbitrary user-defined Kinetic Button that can be placed anywhere on the chassis.
+ */
+data class KineticButton(
+    val id: String,
+    val label: String,
+    val shortCode: String,
+    val normalizedX: Float, // 0.0f (left) to 1.0f (right)
+    val normalizedY: Float, // 0.0f (top) to 1.0f (bottom)
+    val isEdge: Boolean = true,
+    val isDefault: Boolean = false,
+    val actionConfig: ActionConfig = ActionConfig(),
+    val calibratedTorqueX: Float? = null,
+    val calibratedTorqueY: Float? = null,
+    val calibratedZRatio: Float? = null,
+    val isEnabled: Boolean = true
+)
+
 enum class ChassisGestureType(val displayName: String) {
     SINGLE_TAP("Single Tap"),
     DOUBLE_TAP("Rapid Double Tap"),
@@ -60,12 +78,16 @@ data class ActionConfig(
 data class ChassisTriggerEvent(
     val id: Long = System.currentTimeMillis(),
     val zone: ChassisZone,
+    val buttonId: String = zone.id,
+    val buttonLabel: String = zone.displayName,
     val gestureType: ChassisGestureType,
     val confidence: Float,
     val impulseEnergy: Float,
     val torqueX: Float,
     val torqueY: Float,
     val torqueZ: Float,
+    val estimatedX: Float = zone.defaultNormalizedX,
+    val estimatedY: Float = zone.defaultNormalizedY,
     val actionDispatched: SystemActionType,
     val dispatchLatencyMs: Long = 0L,
     val timestampMs: Long = System.currentTimeMillis()
