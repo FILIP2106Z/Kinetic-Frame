@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">KineticFrame</string>
+    <string name="accessibility_service_description">KineticFrame uses this accessibility service to trigger global actions (Back, Home, Recents, Notifications, Screenshot, and touch simulation) when chassis tap and squeeze gestures are detected.</string>
+    <string name="sensor_service_notification_title">KineticFrame Active</string>
+    <string name="sensor_service_notification_desc">Monitoring chassis micro-vibrations and IMU impulse triggers.</string>
+    <string name="sensor_service_channel_name">Chassis Sensor Service</string>
+    <string name="sensor_service_channel_desc">Persistent high-rate IMU vibration detection background service.</string>
+</resources>

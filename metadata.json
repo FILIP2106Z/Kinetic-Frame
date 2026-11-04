@@ -1,0 +1,6 @@
+{
+  "name": "KineticFrame",
+  "description": "Universal chassis multi-touch and vibration trigger system using IMU pattern recognition, wireframe telemetry, and hybrid Root/Shizuku/Accessibility dispatch.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
