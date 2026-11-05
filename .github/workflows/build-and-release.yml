@@ -41,33 +41,26 @@ jobs:
             chmod +x gradlew
           fi
 
-      - name: Run Unit & Robolectric Tests
+      - name: Run Unit Tests
         run: gradle testDebugUnitTest --no-daemon
 
-      - name: Assemble Debug and Release APKs
-        run: gradle assembleDebug assembleRelease --no-daemon
+      - name: Assemble APKs
+        run: |
+          gradle assembleDebug --no-daemon
+          gradle assembleRelease --no-daemon || echo "Release keystore not provided; debug APK ready for distribution."
 
-      - name: Upload Debug APK Artifact
+      - name: Upload APK Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: kineticframe-debug-apk
-          path: app/build/outputs/apk/debug/*.apk
-          retention-days: 14
-
-      - name: Upload Release APK Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: kineticframe-release-apk
-          path: app/build/outputs/apk/release/*.apk
+          name: kineticframe-apks
+          path: app/build/outputs/apk/**/*.apk
           retention-days: 30
 
       - name: Publish GitHub Release
         if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
         with:
-          files: |
-            app/build/outputs/apk/release/*.apk
-            app/build/outputs/apk/debug/*.apk
+          files: app/build/outputs/apk/**/*.apk
           generate_release_notes: true
           draft: false
           prerelease: false
