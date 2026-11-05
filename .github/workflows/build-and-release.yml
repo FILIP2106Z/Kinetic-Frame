@@ -41,10 +41,40 @@ jobs:
             chmod +x gradlew
           fi
 
+      - name: Ensure Keystores Exist for CI Build
+        run: |
+          if [ ! -f debug.keystore ]; then
+            echo "Generating debug.keystore for CI..."
+            keytool -genkeypair -v \
+              -keystore debug.keystore \
+              -alias androiddebugkey \
+              -keyalg RSA \
+              -keysize 2048 \
+              -validity 10000 \
+              -storepass android \
+              -keypass android \
+              -dname "CN=Android Debug,O=Android,C=US"
+          fi
+          if [ ! -f my-upload-key.jks ]; then
+            echo "Generating fallback upload keystore for release assembly..."
+            keytool -genkeypair -v \
+              -keystore my-upload-key.jks \
+              -alias upload \
+              -keyalg RSA \
+              -keysize 2048 \
+              -validity 10000 \
+              -storepass android \
+              -keypass android \
+              -dname "CN=Android Release,O=Android,C=US"
+          fi
+
       - name: Run Unit Tests
         run: gradle testDebugUnitTest --no-daemon
 
       - name: Assemble APKs
+        env:
+          STORE_PASSWORD: ${{ secrets.STORE_PASSWORD || 'android' }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD || 'android' }}
         run: |
           gradle assembleDebug --no-daemon
           gradle assembleRelease --no-daemon || echo "Release keystore not provided; debug APK ready for distribution."
